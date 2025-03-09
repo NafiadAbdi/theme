@@ -120,6 +120,10 @@
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
 	}
+	.primary-gradient {
+		background: linear-gradient(90deg, #ff7000 0%, #e2995f 100%);
+	}
+
 	.background-light850_dark100 {
 		@apply bg-gray-100 dark:bg-gray-800;
 	}
