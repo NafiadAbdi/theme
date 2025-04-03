@@ -1,0 +1,23 @@
+interface Tag {
+	_id: string;
+	name: string;
+}
+
+interface Author {
+	value: number;
+	_id: string;
+	name: string;
+	image: string;
+}
+
+interface Question {
+	_id: string;
+	title: string;
+	tags: Tag[];
+	author: Author;
+	createdAt: Date;
+	upVotes: number;
+	answers: number;
+	views: number;
+	createdAt: date;
+}
