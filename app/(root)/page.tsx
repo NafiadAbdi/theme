@@ -5,6 +5,7 @@ import HomeFilters from "@/components/filters/HomeFilters";
 import LocalSearch from "@/components/search/LocalSearch";
 import { Button } from "@/components/ui/button";
 import ROUTES from "@/constants/route";
+
 import { SearchParams } from "next/dist/server/request/search-params";
 import Link from "next/link";
 import React from "react";
@@ -52,6 +53,7 @@ const questions = [
 interface SearchParams {
 	searchParams: Promise<{ [key: string]: string }>;
 }
+
 const Home = async ({ searchParams }: SearchParams) => {
 	const { query = "", filter = "" } = await searchParams;
 	const filteredQuestions = questions.filter((question) => {

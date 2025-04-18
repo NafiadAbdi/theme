@@ -4,7 +4,6 @@ interface Tag {
 }
 
 interface Author {
-	value: number;
 	_id: string;
 	name: string;
 	image: string;
@@ -19,5 +18,5 @@ interface Question {
 	upVotes: number;
 	answers: number;
 	views: number;
-	createdAt: date;
+	createdAt: Date;
 }
