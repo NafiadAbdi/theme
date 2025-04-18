@@ -1,7 +1,8 @@
 import mongoose, { Mongoose } from "mongoose";
+import logger from "./logger";
 
 const MONGODB_URL = process.env.MONGODB_URL as string;
-if (MONGODB_URL) {
+if (!MONGODB_URL) {
 	throw new Error("MONGODB_URL is not defined");
 }
 
@@ -21,6 +22,7 @@ if (!cached) {
 
 const dbConnect = async (): Promise<Mongoose> => {
 	if (cached.conn) {
+		logger.info("Using existing MongoDB connection"); // replace console.log with logger.info
 		return cached.conn;
 	}
 	if (!cached.promise) {
@@ -29,11 +31,11 @@ const dbConnect = async (): Promise<Mongoose> => {
 				dbName: "devflow",
 			})
 			.then((result) => {
-				console.log("Connected to MongoDB");
+				logger.info("Connected to MongoDB"); // replace console.log with logger.info
 				return result;
 			})
 			.catch((error) => {
-				console.error("Error connecting to MongoDB", error);
+				logger.error("Error connecting to MongoDB", error); // replace with console.log  with logger.error
 				throw error;
 			});
 	}
