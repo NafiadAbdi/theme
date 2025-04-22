@@ -5,9 +5,9 @@ import HomeFilters from "@/components/filters/HomeFilters";
 import LocalSearch from "@/components/search/LocalSearch";
 import { Button } from "@/components/ui/button";
 import ROUTES from "@/constants/route";
-import handleError from "@/lib/handlers/error";
-import { NotFoundError, ValidationError } from "@/lib/http-errors";
-import { SearchParams } from "next/dist/server/request/search-params";
+// import handleError from "@/lib/handlers/error";
+// import { NotFoundError, ValidationError } from "@/lib/http-errors";
+// import { SearchParams } from "next/dist/server/request/search-params";
 import Link from "next/link";
 import React from "react";
 
