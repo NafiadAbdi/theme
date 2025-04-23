@@ -7,25 +7,25 @@ import { UserSchema } from "@/lib/validations";
 import { APIErrorResponse } from "@/types/global";
 
 export async function POST(request: Request) {
-  const { email } = await request.json();
+	const { email } = await request.json();
 
-  try {
-    const validatedData = UserSchema.partial().safeParse({ email });
+	try {
+		const validatedData = UserSchema.partial().safeParse({ email });
 
-    if (!validatedData.success)
-      throw new ValidationError(validatedData.error.flatten().fieldErrors);
+		if (!validatedData.success)
+			throw new ValidationError(validatedData.error.flatten().fieldErrors);
 
-    const user = await User.findOne({ email });
-    if (!user) throw new NotFoundError("User");
+		const user = await User.findOne({ email });
+		if (!user) throw new NotFoundError("User");
 
-    return NextResponse.json(
-      {
-        success: true,
-        data: user,
-      },
-      { status: 200 }
-    );
-  } catch (error) {
-    return handleError(error, "api") as APIErrorResponse;
-  }
+		return NextResponse.json(
+			{
+				success: true,
+				data: user,
+			},
+			{ status: 200 }
+		);
+	} catch (error) {
+		return handleError(error, "api") as APIErrorResponse;
+	}
 }
