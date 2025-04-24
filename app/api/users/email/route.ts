@@ -10,6 +10,7 @@ export async function POST(request: Request) {
 	const { email } = await request.json();
 
 	try {
+		await dbConnect();
 		const validatedData = UserSchema.partial().safeParse({ email });
 
 		if (!validatedData.success)
