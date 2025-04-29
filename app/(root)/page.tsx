@@ -1,12 +1,13 @@
 // import { auth } from "@/auth"; just for checking the authentication
 
+import { auth } from "@/auth";
 import QuestionCard from "@/components/cards/QuestionCard";
 import HomeFilters from "@/components/filters/HomeFilters";
 import LocalSearch from "@/components/search/LocalSearch";
 import { Button } from "@/components/ui/button";
 import ROUTES from "@/constants/route";
-import { api } from "@/lib/api";
-import handleError from "@/lib/handlers/error";
+// import { api } from "@/lib/api";
+// import handleError from "@/lib/handlers/error";
 // import handleError from "@/lib/handlers/error";
 // import { NotFoundError, ValidationError } from "@/lib/http-errors";
 // import { SearchParams } from "next/dist/server/request/search-params";
@@ -53,15 +54,13 @@ const questions = [
 	},
 ];
 
-const test = async () => {
-	const users = fetch("https://jsonplaceholder.typicode.com/users", {
-		timeout: 5000,
-	});
-	try {
-		return await api.users.getAll();
-	} catch (error) {
-		return handleError(error);
-	}
+// const test = async () => {
+	
+// 	try {
+// 		return await api.users.getAll();
+// 	} catch (error) {
+// 		return handleError(error);
+// 	}
 	// try {
 	// 	throw new ValidationError({
 	// 		title: ["Required"],
@@ -70,15 +69,16 @@ const test = async () => {
 	// } catch (error) {
 	// 	return handleError(error);
 	// }
-};
+// };
 interface SearchParams {
 	searchParams: Promise<{ [key: string]: string }>;
 }
 
 const Home = async ({ searchParams }: SearchParams) => {
-	const users = await test();
-	console.log(users);
-
+	// const users = await test();
+	// console.log(users);
+const session = await auth();
+console.log("Session", session);
 	const { query = "", filter = "" } = await searchParams;
 	const filteredQuestions = questions.filter((question) => {
 		const matchesQuery = question.title
