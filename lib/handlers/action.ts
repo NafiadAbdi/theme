@@ -12,6 +12,12 @@ type ActionsOptions<T> = {
 	authorize?: boolean;
 };
 
+// 1. Checking whether the schema and params are provided and validated
+// 2. Checking wether the user is authorized or not
+// 3. Connecting to the database
+// 4. Returning the params and session if everything is fine
+
+
 async function action<T>({
 	params,
 	schema,
