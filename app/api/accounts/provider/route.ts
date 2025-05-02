@@ -7,9 +7,9 @@ import Account from "@/database/account.model";
 import dbConnect from "@/lib/mongoose";
 
 export async function POST(request: Request) {
-    const { providerAccountId } = await request.json();
-
     try {
+        const { providerAccountId } = await request.json();
+
         await dbConnect();
         const validatedData = AccountSchema.partial().safeParse({ providerAccountId });
 
@@ -27,6 +27,7 @@ export async function POST(request: Request) {
             { status: 200 }
         );
     } catch (error) {
+        console.error("Error in /api/accounts/provider POST:", error);
         return handleError(error, "api") as APIErrorResponse;
     }
 }
