@@ -2,12 +2,19 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MDXEditorMethods } from "@mdxeditor/editor";
+import { ReloadIcon } from "@radix-ui/react-icons";
 import dynamic from "next/dynamic";
-import React, { HTMLInputTypeAttribute, useRef } from "react";
+import { useRouter } from "next/navigation";
+import React, { useRef, useTransition } from "react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 
+import ROUTES from "@/constants/route";
+import { toast } from "sonner";
+import { createQuestion } from "@/lib/actions/question.action";
 import { AskQuestionSchema } from "@/lib/validations";
 
+import TagCard from "../cards/TagCard";
 import { Button } from "../ui/button";
 import {
 	Form,
@@ -19,14 +26,15 @@ import {
 	FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import TagCard from "../cards/TagCard";
 
 const Editor = dynamic(() => import("@/components/editor"), {
 	ssr: false,
 });
 
 const QuestionForm = () => {
+	const router = useRouter();
 	const editorRef = useRef<MDXEditorMethods>(null);
+	const [isPending, startTransition] = useTransition();
 
 	const form = useForm<z.infer<typeof AskQuestionSchema>>({
 		resolver: zodResolver(AskQuestionSchema),
@@ -45,6 +53,7 @@ const QuestionForm = () => {
 		if (e.key === "Enter") {
 			e.preventDefault();
 			const tagInput = e.currentTarget.value.trim();
+
 			if (tagInput && tagInput.length < 15 && !field.value.includes(tagInput)) {
 				form.setValue("tags", [...field.value, tagInput]);
 				e.currentTarget.value = "";
@@ -52,7 +61,7 @@ const QuestionForm = () => {
 			} else if (tagInput.length > 15) {
 				form.setError("tags", {
 					type: "manual",
-					message: "Tag must be less than 15 characters",
+					message: "Tag should be less than 15 characters",
 				});
 			} else if (field.value.includes(tagInput)) {
 				form.setError("tags", {
@@ -67,6 +76,7 @@ const QuestionForm = () => {
 		const newTags = field.value.filter((t) => t !== tag);
 
 		form.setValue("tags", newTags);
+
 		if (newTags.length === 0) {
 			form.setError("tags", {
 				type: "manual",
@@ -74,8 +84,32 @@ const QuestionForm = () => {
 			});
 		}
 	};
-	const handleCreateQuestion = (data: z.infer<typeof AskQuestionSchema>) => {
-		console.log(data);
+
+	const handleCreateQuestion = async (
+		data: z.infer<typeof AskQuestionSchema>
+	) => {
+		// console.log("Submitting question data:", data);
+		if (!data.content || data.content.trim() === "") {
+			toast.error("Content is required");
+			return;
+		}
+		// Adjust data to match backend field names if needed
+		const adjustedData = {
+			...data,
+			Content: data.content,
+		};
+
+		startTransition(async () => {
+			const result = await createQuestion(adjustedData);
+
+			if (result.success) {
+				toast.success("Question created successfully");
+
+				if (result.data) router.push(ROUTES.QUESTION(result.data._id));
+			} else {
+				toast.error(`Error ${result.status}: ${result.error?.message || "Something went wrong"}`);
+			}
+		});
 	};
 
 	return (
@@ -146,7 +180,7 @@ const QuestionForm = () => {
 										onKeyDown={(e) => handleInputKeyDown(e, field)}
 									/>
 									{field.value.length > 0 && (
-										<div className="flex-start  mt-2.5  flex-wrap gap-2.5">
+										<div className="flex-start mt-2.5 flex-wrap gap-2.5">
 											{field?.value?.map((tag: string) => (
 												<TagCard
 													key={tag}
@@ -174,9 +208,17 @@ const QuestionForm = () => {
 				<div className="mt-16 flex justify-end">
 					<Button
 						type="submit"
+						disabled={isPending}
 						className="primary-gradient w-fit !text-light-900"
 					>
-						Ask A Question
+						{isPending ? (
+							<>
+								<ReloadIcon className="mr-2 size-4 animate-spin" />
+								<span>Submitting</span>
+							</>
+						) : (
+							<>Ask A Question</>
+						)}
 					</Button>
 				</div>
 			</form>

@@ -1,5 +1,5 @@
 import LeftSidebar from "@/components/navigation/LeftSidebar";
-import Navbar from "@/components/navigation/navbar/Navbar";
+import Navbar from "@/components/navigation/navbar";
 import RightSidebar from "@/components/navigation/RightSidebar";
 import React, { ReactNode } from "react";
 
