@@ -28,9 +28,14 @@ import {
 import { Input } from "../ui/input";
 import { Question } from "@/types/global";
 
+
+
+
+
 const Editor = dynamic(() => import("@/components/editor"), {
 	ssr: false,
 });
+
 
 interface Params {
 	question?: Question;
@@ -98,6 +103,7 @@ const QuestionForm = ({ question, isEdit = false }: Params) => {
 				const result = await editQuestion({
 					questionId: question._id,
 					...data,
+					Content: data.content,
 				});
 
 				if (result.success) {
@@ -115,7 +121,10 @@ const QuestionForm = ({ question, isEdit = false }: Params) => {
 				return;
 			}
 
-			const result = await createQuestion(data);
+			const result = await createQuestion({
+				...data,
+				Content: data.content,
+			});
 
 			if (result.success) {
 				toast.success("Question created successfully");

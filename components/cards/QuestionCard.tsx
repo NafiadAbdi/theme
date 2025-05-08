@@ -4,6 +4,7 @@ import Link from "next/link";
 import React from "react";
 import TagCard from "./TagCard";
 import Metric from "../Metric";
+import { Question, Tag } from "@/types/global";
 
 interface Props {
 	question: Question;
@@ -49,6 +50,7 @@ const QuestionCard = ({
 						value={upVotes}
 						title="Votes"
 						textStyles="small-medium text-dark400_light800"
+						href=""
 					/>
 					<Metric
 						imgUrl="/icons/message.svg"
@@ -56,6 +58,7 @@ const QuestionCard = ({
 						value={answers}
 						title="Answers"
 						textStyles="small-medium text-dark400_light800"
+						href=""
 					/>
 					<Metric
 						imgUrl="/icons/eye.svg"
@@ -63,6 +66,7 @@ const QuestionCard = ({
 						value={views}
 						title="Views"
 						textStyles="small-medium text-dark400_light800"
+						href=""
 					/>
 				</div>
 			</div>
