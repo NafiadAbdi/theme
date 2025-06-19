@@ -1,5 +1,4 @@
 const ROUTES = {
-	HOME: "/",
 	SIGN_IN: "/sign-in",
 	SIGN_UP: "/sign-up",
 	ASK_QUESTION: "/ask-question",
@@ -7,9 +6,10 @@ const ROUTES = {
 	Community: "/community",
 	TAGS: "/tags",
 	JOBS: "/jobs",
-	PROFILE: (id: string) => `/profile/${id}`,
-	QUESTION: (id: string) => `/question/${id}`,
+	// QUESTION: (id: string) => `/question/${id}`,
+	QUESTION: (questionId: string) => `/question/${questionId}`,
 	TAG: (id: string) => `/tags/${id}`,
+	PROFILE: (userId: string) => `/profile/${userId}`,
 	SIGN_IN_WITH_OAUTH: `signin-with-oauth`,
 };
 
