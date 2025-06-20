@@ -13,6 +13,7 @@ import React from "react";
 import Link from "next/link";
 import AnswerForm from "@/components/forms/AnswerForm";
 import { getAnswers } from "@/lib/actions/answer.action";
+import AllAnswers from "@/components/answers/AllAnswers";
 // import { after } from "node:test";
 
 const QuestionDetails = async ({ params }: RouteParams) => {
@@ -39,8 +40,6 @@ const QuestionDetails = async ({ params }: RouteParams) => {
 		pageSize: 10,
 		filter: "latest",
 	});
-
-	console.log("Answers Result:", answersResult);
 	const { author, createdAt, answers, views, tags, title } = question;
 
 	return (
@@ -107,6 +106,15 @@ const QuestionDetails = async ({ params }: RouteParams) => {
 					/>
 				))}
 			</div>
+
+			<section className="my-5">
+				<AllAnswers
+					data={answersResult?.answers || []}
+					success={areAnswersLoaded}
+					error={answersError}
+					totalAnswers={answersResult?.totalAnswers || 0}
+				/>
+			</section>
 
 			<section className="my-5">
 				<AnswerForm questionId={question._id} />
