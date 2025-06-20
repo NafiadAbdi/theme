@@ -41,3 +41,10 @@ interface CreateAnswerParams {
 	questionId: string;
 	content: string;
 }
+
+interface GetAnswerParams extends PaginationSearchParams {
+	questionId: string;
+	page?: number;
+	pageSize?: number;
+	filter?: "latest" | "oldest" | "popular";
+}

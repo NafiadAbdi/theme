@@ -12,6 +12,7 @@ import { redirect } from "next/navigation";
 import React from "react";
 import Link from "next/link";
 import AnswerForm from "@/components/forms/AnswerForm";
+import { getAnswers } from "@/lib/actions/answer.action";
 // import { after } from "node:test";
 
 const QuestionDetails = async ({ params }: RouteParams) => {
@@ -28,7 +29,18 @@ const QuestionDetails = async ({ params }: RouteParams) => {
 	}
 
 	if (!success || !question) return redirect("/404");
+	const {
+		success: areAnswersLoaded,
+		data: answersResult,
+		error: answersError,
+	} = await getAnswers({
+		questionId: id,
+		page: 1,
+		pageSize: 10,
+		filter: "latest",
+	});
 
+	console.log("Answers Result:", answersResult);
 	const { author, createdAt, answers, views, tags, title } = question;
 
 	return (

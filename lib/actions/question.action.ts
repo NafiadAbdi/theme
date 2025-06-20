@@ -21,7 +21,6 @@ import {
 	PaginatedSearchParams,
 } from "@/types/global";
 
-
 export async function createQuestion(
 	params: CreateQuestionParams
 ): Promise<ActionResponse<Question>> {
