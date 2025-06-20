@@ -20,8 +20,7 @@ import {
 	ErrorResponse,
 	PaginatedSearchParams,
 } from "@/types/global";
-import ROUTES from "@/constants/route";
-import { revalidatePath } from "next/cache";
+
 
 export async function createQuestion(
 	params: CreateQuestionParams
@@ -213,7 +212,7 @@ export async function getQuestion(
 	try {
 		const question = await Question.findById(questionId)
 			.populate("tags")
-			.populate("author", "_id name iamge");
+			.populate("author", "_id name image");
 
 		if (!question) {
 			throw new Error("Question not found");
@@ -319,8 +318,6 @@ export async function incrementViews(
 		question.views += 1;
 
 		await question.save();
-
-		revalidatePath(ROUTES.QUESTION(questionId));
 
 		return {
 			success: true,
