@@ -57,30 +57,20 @@ const AnswerForm = ({ questionId, questionTitle, questionContent }: Props) => {
 			if (result.success) {
 				form.reset();
 
-				toast({
-					title: "Success",
-					description: "Your answer has been posted successfully",
-				});
+				toast.success("Your answer has been posted successfully");
 
 				if (editorRef.current) {
 					editorRef.current.setMarkdown("");
 				}
 			} else {
-				toast({
-					title: "Error",
-					description: result.error?.message,
-					variant: "destructive",
-				});
+				toast.error(result.error?.message || "Failed to post your answer");
 			}
 		});
 	};
 
 	const generateAIAnswer = async () => {
 		if (session.status !== "authenticated") {
-			return toast({
-				title: "Please log in",
-				description: "You need to be logged in to use this feature",
-			});
+			return toast.success("AI generated answer has been generated");
 		}
 
 		setIsAISubmitting(true);

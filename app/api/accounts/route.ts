@@ -27,7 +27,14 @@ export async function POST(request: Request) {
 		await dbConnect();
 		const body = await request.json();
 
-		const validatedData = AccountSchema.parse(body);
+		const parsed = AccountSchema.safeParse(body);
+		if (!parsed.success) {
+			return NextResponse.json(
+				{ success: false, error: parsed.error.errors },
+				{ status: 400 }
+			);
+		}
+		const validatedData = parsed.data;
 
 		const existingAccount = await Account.findOne({
 			provider: validatedData.provider,
