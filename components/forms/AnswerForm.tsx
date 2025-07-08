@@ -36,7 +36,7 @@ interface Props {
 const AnswerForm = ({ questionId, questionTitle, questionContent }: Props) => {
 	const [isAnswering, startAnsweringTransition] = useTransition();
 	const [isAISubmitting, setIsAISubmitting] = useState(false);
-	// const session = useSession();
+	const session = useSession();
 
 	const editorRef = useRef<MDXEditorMethods>(null);
 
@@ -70,11 +70,13 @@ const AnswerForm = ({ questionId, questionTitle, questionContent }: Props) => {
 
 	const generateAIAnswer = async () => {
 		if (session.status !== "authenticated") {
-			return toast.success("AI generated answer has been generated");
+			return toast({
+				title: "Please log in",
+				description: "You need to be logged in to use this feature",
+			});
 		}
 
 		setIsAISubmitting(true);
-
 		const userAnswer = editorRef.current?.getMarkdown();
 
 		try {

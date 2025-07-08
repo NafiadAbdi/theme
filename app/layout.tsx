@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "sonner";
 import { ReactNode } from "react";
+import { SessionProvider } from "next-auth/react"; // ✅ import this
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -33,15 +34,19 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 				suppressHydrationWarning
 				className={`${geistSans.className} ${geistMono.className} antialiased`}
 			>
-				<ThemeProvider
-					attribute="class"
-					defaultTheme="system"
-					enableSystem
-					disableTransitionOnChange
-				>
-					{children}
-					<Toaster position="top-center" />
-				</ThemeProvider>
+				<SessionProvider>
+					{" "}
+					{/* ✅ FIXED - Now useSession will work */}
+					<ThemeProvider
+						attribute="class"
+						defaultTheme="system"
+						enableSystem
+						disableTransitionOnChange
+					>
+						{children}
+						<Toaster position="top-center" />
+					</ThemeProvider>
+				</SessionProvider>
 			</body>
 		</html>
 	);
