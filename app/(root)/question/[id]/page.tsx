@@ -14,6 +14,7 @@ import Link from "next/link";
 import AnswerForm from "@/components/forms/AnswerForm";
 import { getAnswers } from "@/lib/actions/answer.action";
 import AllAnswers from "@/components/answers/AllAnswers";
+import Votes from "@/components/votes/Votes";
 // import { after } from "node:test";
 
 const QuestionDetails = async ({ params }: RouteParams) => {
@@ -61,7 +62,13 @@ const QuestionDetails = async ({ params }: RouteParams) => {
 					</div>
 
 					<div className="flex justify-end">
-						<p>Votes</p>
+						<Votes
+							targetType="question"
+							upvotes={question.upvotes}
+							downvotes={question.downvotes}
+							targetId={question._id}
+							// hasVotedPromise={hasVotedPromise}
+						/>
 					</div>
 				</div>
 
