@@ -1,4 +1,4 @@
-import { revalidatePath } from "next/cache";
+// import { revalidatePath } from "next/cache";
 import TagCard from "@/components/cards/TagCard";
 import { Preview } from "@/components/editor/Preview";
 import Metric from "@/components/Metric";
@@ -9,28 +9,25 @@ import { formatNumber, getTimeStamp } from "@/lib/utils";
 import { RouteParams, Tag } from "@/types/global";
 import { redirect } from "next/navigation";
 
-import React from "react";
+import React, { Suspense } from "react";
 import Link from "next/link";
 import AnswerForm from "@/components/forms/AnswerForm";
 import { getAnswers } from "@/lib/actions/answer.action";
 import AllAnswers from "@/components/answers/AllAnswers";
 import Votes from "@/components/votes/Votes";
-// import { after } from "node:test";
+import { hasVoted } from "@/lib/actions/vote.action";
 
 const QuestionDetails = async ({ params }: RouteParams) => {
 	const { id } = await params;
 
 	const { success, data: question } = await getQuestion({ questionId: id });
 
-	// after(async () => {
-	// 	await incrementViews({ questionId: id });
-	// });
-
 	if (success && question) {
 		await incrementViews({ questionId: id });
 	}
 
 	if (!success || !question) return redirect("/404");
+
 	const {
 		success: areAnswersLoaded,
 		data: answersResult,
@@ -41,7 +38,16 @@ const QuestionDetails = async ({ params }: RouteParams) => {
 		pageSize: 10,
 		filter: "latest",
 	});
+
+	const hasVotedPromise = hasVoted({
+		targetId: question._id,
+		targetType: "question",
+	});
+
 	const { author, createdAt, answers, views, tags, title } = question;
+
+	// ✅ FIX: Precompute time string on the server side
+	const askedTime = `asked ${getTimeStamp(new Date(createdAt))}`;
 
 	return (
 		<>
@@ -62,13 +68,15 @@ const QuestionDetails = async ({ params }: RouteParams) => {
 					</div>
 
 					<div className="flex justify-end">
-						<Votes
-							targetType="question"
-							upvotes={question.upvotes}
-							downvotes={question.downvotes}
-							targetId={question._id}
-							// hasVotedPromise={hasVotedPromise}
-						/>
+						<Suspense fallback={<div>Loading...</div>}>
+							<Votes
+								upvotes={question.upvotes}
+								downvotes={question.downvotes}
+								targetType="question"
+								targetId={question._id}
+								hasVotedPromise={hasVotedPromise}
+							/>
+						</Suspense>
 					</div>
 				</div>
 
@@ -81,7 +89,7 @@ const QuestionDetails = async ({ params }: RouteParams) => {
 				<Metric
 					imgUrl="/icons/clock.svg"
 					alt="clock icon"
-					value={` asked ${getTimeStamp(new Date(createdAt))}`}
+					value={askedTime}
 					title=""
 					textStyles="small-regular text-dark400_light700"
 				/>

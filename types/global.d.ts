@@ -64,4 +64,7 @@ interface Answer {
 	content: string;
 	author: Author;
 	createdAt: Date;
+
+	upVotes: number;
+	downVotes: number;
 }
