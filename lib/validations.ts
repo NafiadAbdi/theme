@@ -280,6 +280,6 @@ export const GlobalSearchSchema = z.object({
 	type: z.string().nullable().optional(),
 });
 
-export const CollectionBaseSchema = z.object({
-	questionId: z.string().min(1, { message: "Question ID is required." }),
-});
+// export const CollectionBaseSchema = z.object({
+// 	questionId: z.string().min(1, { message: "Question ID is required." }),
+// });
