@@ -6,8 +6,10 @@ import Link from "next/link";
 import ROUTES from "@/constants/route";
 import { Suspense } from "react";
 import Votes from "../votes/Votes";
+import { Answer } from "@/types/global";
+import { hasVoted } from "@/lib/actions/vote.action";
 
-const AnswerCard = ({
+const AnswerCard = ({c
 	_id,
 	author,
 	content,
