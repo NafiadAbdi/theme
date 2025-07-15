@@ -44,6 +44,10 @@ const QuestionDetails = async ({ params }: RouteParams) => {
 		targetId: question._id,
 		targetType: "question",
 	});
+	
+	const hasSavedQuestionPromise = hasVoted({
+		questionId: question._id,
+	});
 
 	const { author, createdAt, answers, views, tags, title } = question;
 
@@ -68,7 +72,7 @@ const QuestionDetails = async ({ params }: RouteParams) => {
 						</Link>
 					</div>
 
-					<div className="flex justify-end">
+					<div className="flex item-center justify-end gap-4">
 						<Suspense fallback={<div>Loading...</div>}>
 							<Votes
 								upvotes={question.upvotes}
@@ -78,11 +82,11 @@ const QuestionDetails = async ({ params }: RouteParams) => {
 								hasVotedPromise={hasVotedPromise}
 							/>
 						</Suspense>
-						\
+
 						<Suspense fallback={<div>Loading...</div>}>
-							<SaveQuestion questionId={question._id} />
+							<SaveQuestion questionId={question._id} hasSavedQuestionPromise={hasSavedQuestionPromise} />
 						</Suspense>
-					</div>
+					</div>c
 				</div>
 
 				<h2 className="h2-semibold text-dark200_light900 mt-3.5 w-full">

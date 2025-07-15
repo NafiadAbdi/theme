@@ -9,7 +9,7 @@ import Votes from "../votes/Votes";
 import { Answer } from "@/types/global";
 import { hasVoted } from "@/lib/actions/vote.action";
 
-const AnswerCard = ({c
+const AnswerCard = ({
 	_id,
 	author,
 	content,
