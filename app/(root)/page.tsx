@@ -9,7 +9,7 @@ import HomeFilters from "@/components/filters/HomeFilters";
 import { getQuestions } from "@/lib/actions/question.action";
 import DataRenderer from "@/components/DataRender";
 import { EMPTY_QUESTION } from "@/constants/state";
-import CommonFilter from "@/components/filters/CommonFolter";
+import CommonFilter from "@/components/filters/CommonFilter";
 import { HomePageFilters } from "@/constants/filters";
 // import { GetQuestionSchema } from "@/lib/validations";
 
