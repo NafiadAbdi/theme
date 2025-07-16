@@ -11,6 +11,7 @@ import DataRenderer from "@/components/DataRender";
 import { EMPTY_QUESTION } from "@/constants/state";
 import CommonFilter from "@/components/filters/CommonFilter";
 import { HomePageFilters } from "@/constants/filters";
+import Pagination from "@/components/Pagination";
 // import { GetQuestionSchema } from "@/lib/validations";
 
 interface SearchParams {
@@ -27,7 +28,7 @@ const Home = async ({ searchParams }: SearchParams) => {
 		filter: filter || "",
 	});
 
-	const { questions } = data || {};
+	const { questions, isNext } = data || {};
 
 	return (
 		<>
@@ -69,6 +70,8 @@ const Home = async ({ searchParams }: SearchParams) => {
 					</div>
 				)}
 			/>
+
+			<Pagination  page={page} isNext={isNext || false}/>
 		</>
 	);
 };

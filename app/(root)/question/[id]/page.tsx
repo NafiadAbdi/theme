@@ -18,15 +18,14 @@ import Votes from "@/components/votes/Votes";
 import { hasVoted } from "@/lib/actions/vote.action";
 import SaveQuestion from "@/components/questions/SavedQuestions";
 
-const QuestionDetails = async ({ params, SearchParams }: RouteParams) => {
+const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
 	const { id } = await params;
-	const {page, pageSize, filter} = await SearchParams;
-
+	const { page, pageSize, filter } = await searchParams;
 	const { success, data: question } = await getQuestion({ questionId: id });
 
-	if (success && question) {
+	after(async () => {
 		await incrementViews({ questionId: id });
-	}
+	});
 
 	if (!success || !question) return redirect("/404");
 
@@ -45,15 +44,12 @@ const QuestionDetails = async ({ params, SearchParams }: RouteParams) => {
 		targetId: question._id,
 		targetType: "question",
 	});
-	
-	const hasSavedQuestionPromise = hasVoted({
+
+	const hasSavedQuestionPromise = hasSavedQuestion({
 		questionId: question._id,
 	});
 
-	const { author, createdAt, answers, views, tags, title } = question;
-
-	// ✅ FIX: Precompute time string on the server side
-	const askedTime = `asked ${getTimeStamp(new Date(createdAt))}`;
+	const { author, createdAt, answers, views, tags, content, title } = question;
 
 	return (
 		<>
@@ -73,21 +69,24 @@ const QuestionDetails = async ({ params, SearchParams }: RouteParams) => {
 						</Link>
 					</div>
 
-					<div className="flex item-center justify-end gap-4">
+					<div className="flex items-center justify-end gap-4">
 						<Suspense fallback={<div>Loading...</div>}>
 							<Votes
+								targetType="question"
 								upvotes={question.upvotes}
 								downvotes={question.downvotes}
-								targetType="question"
 								targetId={question._id}
 								hasVotedPromise={hasVotedPromise}
 							/>
 						</Suspense>
 
 						<Suspense fallback={<div>Loading...</div>}>
-							<SaveQuestion questionId={question._id} hasSavedQuestionPromise={hasSavedQuestionPromise} />
+							<SaveQuestion
+								questionId={question._id}
+								hasSavedQuestionPromise={hasSavedQuestionPromise}
+							/>
 						</Suspense>
-					</div>c
+					</div>
 				</div>
 
 				<h2 className="h2-semibold text-dark200_light900 mt-3.5 w-full">
@@ -99,7 +98,7 @@ const QuestionDetails = async ({ params, SearchParams }: RouteParams) => {
 				<Metric
 					imgUrl="/icons/clock.svg"
 					alt="clock icon"
-					value={askedTime}
+					value={` asked ${getTimeStamp(new Date(createdAt))}`}
 					title=""
 					textStyles="small-regular text-dark400_light700"
 				/>
@@ -119,7 +118,7 @@ const QuestionDetails = async ({ params, SearchParams }: RouteParams) => {
 				/>
 			</div>
 
-			<Preview content={question.content} />
+			<Preview content={content} />
 
 			<div className="mt-8 flex flex-wrap gap-2">
 				{tags.map((tag: Tag) => (
@@ -134,7 +133,9 @@ const QuestionDetails = async ({ params, SearchParams }: RouteParams) => {
 
 			<section className="my-5">
 				<AllAnswers
-					data={answersResult?.answers || []}
+					page={Number(page) || 1}
+					isNext={answersResult?.isNext || false}
+					data={answersResult?.answers}
 					success={areAnswersLoaded}
 					error={answersError}
 					totalAnswers={answersResult?.totalAnswers || 0}
