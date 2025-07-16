@@ -64,7 +64,12 @@ interface Answer {
 	content: string;
 	author: Author;
 	createdAt: Date;
-
 	upVotes: number;
 	downVotes: number;
+}
+
+interface Collection {
+  _id: string;
+  author: string | Author;
+  question: Question;
 }
