@@ -77,6 +77,7 @@ export const getTags = async (
 
 export const getTopTags = async (): Promise<ActionResponse<Tag[]>> => {
 	try {
+		
 		await dbConnect();
 
 		const tags = await Tag.find().sort({ questions: -1 }).limit(5);
